@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+from django.http import HttpResponse
 import os
 from . info import *
 import dj_database_url
@@ -91,14 +92,18 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+#Vercel Server
 # DATABASES = {
 #     'default': dj_database_url.config(default='postgres://default:X2hVB7KyWrIR@ep-broken-block-77778577.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb')
 #     }
 
+# SuperBase Server
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://postgres.wjjixaokmlhbzcvrboat:_mjM$xt$i79E8&r@aws-0-ap-south-1.pooler.supabase.com:6543/postgres')
+    'default': dj_database_url.config(default='postgres://postgres.bqskrvcdmroshhnjblwb:_mjM$xt$i79E8&r@aws-0-ap-south-1.pooler.supabase.com:6543/postgres')
 }
 
+
+# Local Server
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
