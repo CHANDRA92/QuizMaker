@@ -36,7 +36,7 @@ EMAIL_PORT=EMAIL_PORT
 SECRET_KEY = '@k0#p3kidu)yaaa3u1hplxz)f@^6xiy384*(+n@@s5x#1bx@m5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['.vercel.app','localhsot','127.0.0.1','.new.sh']
 
@@ -91,9 +91,13 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': dj_database_url.config(default='postgres://default:X2hVB7KyWrIR@ep-broken-block-77778577.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb')
+#     }
+
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://default:X2hVB7KyWrIR@ep-broken-block-77778577.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb')
-    }
+    'default': dj_database_url.config(default='postgres://postgres.wjjixaokmlhbzcvrboat:_mjM$xt$i79E8&r@aws-0-ap-south-1.pooler.supabase.com:6543/postgres')
+}
 
 # DATABASES = {
 #     'default': {
@@ -135,6 +139,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

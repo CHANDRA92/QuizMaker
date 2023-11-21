@@ -33,6 +33,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes,force_str
 
 from django.http import HttpResponseServerError
+from django.views.decorators.csrf import csrf_protect,csrf_exempt
+
+# forgot password
+
+from django.contrib.auth import authenticate,login,logout
+import uuid
 
 #for showing signup/login button for student
 def studentclick_view(request):
@@ -41,6 +47,7 @@ def studentclick_view(request):
     return render(request,'student/studentclick.html')
 
 user_flag = False
+
 
 def check_username(request):
     username = request.POST.get('username')
@@ -176,6 +183,7 @@ def student_signup_view(request):
                 user = userForm.save(commit=False)
                 user.set_password(user.password)
                 user.is_active = False
+                user.email = request.POST.get('address')
                 user.save()
                 messages.success(request, "Your account has been created.We have to sent you an email, please confirm your email in order to activate your account")
 
@@ -363,7 +371,9 @@ def take_exam_view(request,pk):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
+@csrf_exempt
 def start_exam_view(request,testno):
+    c = {}
     # course=QMODEL.Course.objects.get(id=pk)
     course=QMODEL.testdetails.objects.get(id=testno)
     questions=QMODEL.Question.objects.all().filter(testno=testno)
@@ -377,36 +387,40 @@ def start_exam_view(request,testno):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
+@csrf_exempt
 def calculate_marks_view(request):
-    # if request.COOKIES.get('course_id') is not None:
-    #     course_id = request.COOKIES.get('course_id')
-    #     course=QMODEL.Course.objects.get(id=course_id)
-    if request.COOKIES.get('testno') is not None:
-        course_id1 = request.COOKIES.get('testno')
-        #course=QMODEL.Course.objects.get(id=course_id)
-        course_id=QMODEL.testdetails.objects.all().filter(id=course_id1).values_list('id',flat=True).first()
-        # print(course_id)
-        total_marks=0
-        #questions=QMODEL.Question.objects.all().filter(course_id=course)
-        questions=QMODEL.Question.objects.all().filter(testno=course_id1)
-        for i in range(len(questions)):
-            
-            selected_ans = request.COOKIES.get(str(i+1))
-            actual_answer = questions[i].answer
-            if selected_ans == actual_answer:
-                total_marks = total_marks + questions[i].marks
-        student = models.Student.objects.get(user_id=request.user.id)
-        result = QMODEL.Result()
-        result.marks=total_marks
-        result.testno=course_id
-        result.student=student
-        result.save()
-        # messages.success(request, 'Exam submitted successfully. View your result in the result section.')
-        return HttpResponseRedirect('success-page1')
-    else:
-        messages.error(request, 'Error submitting exam. Please try again.')
+    try:
+        # if request.COOKIES.get('course_id') is not None:
+        #     course_id = request.COOKIES.get('course_id')
+        #     course=QMODEL.Course.objects.get(id=course_id)
+        if request.COOKIES.get('testno') is not None:
+            course_id1 = request.COOKIES.get('testno')
+            #course=QMODEL.Course.objects.get(id=course_id)
+            course_id=QMODEL.testdetails.objects.all().filter(id=course_id1).values_list('id',flat=True).first()
+            # print(course_id)
+            total_marks=0
+            #questions=QMODEL.Question.objects.all().filter(course_id=course)
+            questions=QMODEL.Question.objects.all().filter(testno=course_id1)
+            for i in range(len(questions)):
+                
+                selected_ans = request.COOKIES.get(str(i+1))
+                actual_answer = questions[i].answer
+                if selected_ans == actual_answer:
+                    total_marks = total_marks + questions[i].marks
+            student = models.Student.objects.get(user_id=request.user.id)
+            result = QMODEL.Result()
+            result.marks=total_marks
+            result.testno=course_id
+            result.student=student
+            result.save()
+            # messages.success(request, 'Exam submitted successfully. View your result in the result section.')
+            return HttpResponseRedirect('success-page1')
+        else:
+            messages.error(request, 'Error submitting exam. Please try again.')
 
-    return HttpResponseRedirect('student-dashboard')
+        # return HttpResponseRedirect('student-dashboard')
+    except Exception as e:
+        print(e)
 
 def success_page1_view(request):
     return render(request, 'student/success_page1.html')

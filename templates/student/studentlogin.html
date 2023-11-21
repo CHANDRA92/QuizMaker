@@ -112,7 +112,8 @@
                         </div>
                     {% endif %}
                      <input type="submit" name="" value="Login">
-
+                     <p class="text-center text-muted" style="color: aliceblue;" >Forgot your password? <a href="{%url 'password-reset'%}"> Reset Password</a></p>
+                     {% comment %} <a href="{% url 'forget-password'%}">Forget Password</a> {% endcomment %}
                 </form>
                 
             </div>

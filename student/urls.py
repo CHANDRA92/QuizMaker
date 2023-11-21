@@ -1,6 +1,14 @@
 from django.urls import path
 from student import views
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import (
+    LogoutView, 
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
+
 
 urlpatterns = [
 path('studentclick', views.studentclick_view),
@@ -30,5 +38,17 @@ path('check_password', views.check_password_strength, name='check_password'),
 path('succes-page', views.success_page_view, name='succes-page'),
 path('success-page1', views.success_page1_view, name='success-page1'),
 #email activation page
-path('activate/<str:uidb64>/<str:token>', views.activate, name='activate')
+path('activate/<str:uidb64>/<str:token>', views.activate, name='activate'),
+#Forgot Password
+path('password-reset', 
+        PasswordResetView.as_view(
+            template_name='student/users/password_reset.html',
+            html_email_template_name='student/users/password_reset_email.html'
+        ),
+        name='password-reset'
+    ),
+    path('password-reset/done/', PasswordResetDoneView.as_view(template_name='student/users/password_reset_done.html'),name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='student/users/password_reset_confirm.html'),name='password_reset_confirm'),
+    path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='student/users/password_reset_complete.html'),name='password_reset_complete'),
+
 ]
