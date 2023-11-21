@@ -93,14 +93,14 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 #Vercel Server
-# DATABASES = {
-#     'default': dj_database_url.config(default='postgres://default:X2hVB7KyWrIR@ep-broken-block-77778577.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb')
-#     }
+DATABASES = {
+    'default': dj_database_url.config(default='postgres://default:X2hVB7KyWrIR@ep-broken-block-77778577.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb')
+    }
 
 # SuperBase Server
-DATABASES = {
-    'default': dj_database_url.config(default='postgres://postgres.bqskrvcdmroshhnjblwb:_mjM$xt$i79E8&r@aws-0-ap-south-1.pooler.supabase.com:6543/postgres')
-}
+# DATABASES = {
+#     'default': dj_database_url.config(default='postgres://postgres.bqskrvcdmroshhnjblwb:_mjM$xt$i79E8&r@aws-0-ap-south-1.pooler.supabase.com:6543/postgres')
+# }
 
 
 # Local Server

@@ -255,120 +255,120 @@ def teacher_question_view(request):
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 
-def teacher_add_question_view(request):
-    try:
-        teacher_id = QMODEL.Teacher.objects.get(user_id=request.user.id).pk
-        testdetailsform = QFORM.testdetailsForm(teacher_id=teacher_id,initial={'teacher_id': teacher_id})
-        question_count = 0
-        # testno1 = QMODEL.testdetails.objects.last().pk
-        # testno2 = testno1 + 1 if testno1 is not None else 1
-
-        latest_testdetails = QMODEL.testdetails.objects.last()
-        testno1 = latest_testdetails.pk if latest_testdetails is not None else 0
-        testno2 = testno1 + 1
-        
-        question_forms = [QFORM.QuestionForm(prefix=str(i)) for i in range(question_count)]
-        if request.method == 'POST':
-            course3=QMODEL.Course.objects.get(id=request.POST.get('course_id'))    
-            testdetailsform = QFORM.testdetailsForm(request.POST,teacher_id=teacher_id, initial={'teacher_id': teacher_id})
-            question_count = int(request.POST.get('question_number', 0))
-            question_forms = [QFORM.QuestionForm(request.POST,initial={'course_id':course3,'testno':testno2} ,prefix=str(i)) for i in range(question_count)]  
-            if testdetailsform.is_valid() and all([form.is_valid() for form in question_forms]):
-                tdetails = testdetailsform.save(commit=False)
-                course1=QMODEL.Course.objects.get(id=request.POST.get('course_id'))
-                tdetails.course_id=course1
-                tdetails.save()
-                total_marks = int(request.POST.get('total_marks'))
-                question_marks = [int(request.POST.get(f'form-{i}-marks')) for i in range(question_count)]
-
-                if total_marks != sum(question_marks):
-                    messages.error(request, "Total marks should be equal to the sum of each question's marks.")
-                    # return render(request, 'teacher/teacher_add_question.html', context)
-                # testno3=form.cleaned_data['testno']
-                # print(testno3)
-                #question_forms.cleaned_data['course_id'] = course3
-                #course4=question_forms.cleaned_data['course_id']  
-                for i, form in enumerate(question_forms):
-                    #form.cleaned_data['course_id'] = course3
-                    #course4=form.cleaned_data['course_id']  
-                    question = form.save(commit=False)
-                    question.course_id=course3
-                    question.testno=testno2
-                    # emarkslist.append(emarks)
-                    question.save()
-                    # testno3 = QMODEL.Question.objects.last()
-                    # testno3.testno=testno2
-                    # testno3.save()
-                    
-                return HttpResponseRedirect('/teacher/teacher-view-question')
-            else:
-                for field, errors in testdetailsform.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{error}")
-
-                for i, form in enumerate(question_forms):
-                    for field, errors in form.errors.items():
-                        for error in errors:
-                            messages.error(request, f"Question {i + 1}: {error}")
-                # print("Forms are invalid", testdetailsform.errors, "----", [form.errors for form in question_forms])
-        
-            
-        context = {'testdetailsform': testdetailsform, 'question_forms': question_forms}
-        return render(request, 'teacher/teacher_add_question.html', context)
-    except Exception as e:
-        print(e)
-        return HttpResponseRedirect('/teacher/teacher-dashboard')
-
-# new
 # def teacher_add_question_view(request):
 #     try:
 #         teacher_id = QMODEL.Teacher.objects.get(user_id=request.user.id).pk
-#         testdetailsform = QFORM.testdetailsForm(teacher_id=teacher_id, initial={'teacher_id': teacher_id})
+#         testdetailsform = QFORM.testdetailsForm(teacher_id=teacher_id,initial={'teacher_id': teacher_id})
 #         question_count = 0
+#         # testno1 = QMODEL.testdetails.objects.last().pk
+#         # testno2 = testno1 + 1 if testno1 is not None else 1
 
 #         latest_testdetails = QMODEL.testdetails.objects.last()
 #         testno1 = latest_testdetails.pk if latest_testdetails is not None else 0
 #         testno2 = testno1 + 1
-
+        
 #         question_forms = [QFORM.QuestionForm(prefix=str(i)) for i in range(question_count)]
-
 #         if request.method == 'POST':
-#             course3 = QMODEL.Course.objects.get(id=request.POST.get('course_id'))
-#             testdetailsform = QFORM.testdetailsForm(request.POST, teacher_id=teacher_id, initial={'teacher_id': teacher_id})
+#             course3=QMODEL.Course.objects.get(id=request.POST.get('course_id'))    
+#             testdetailsform = QFORM.testdetailsForm(request.POST,teacher_id=teacher_id, initial={'teacher_id': teacher_id})
 #             question_count = int(request.POST.get('question_number', 0))
-#             question_forms = [QFORM.QuestionForm(request.POST, initial={'course_id': course3, 'testno': testno2}, prefix=str(i)) for i in range(question_count)]
-
+#             question_forms = [QFORM.QuestionForm(request.POST,initial={'course_id':course3,'testno':testno2} ,prefix=str(i)) for i in range(question_count)]  
 #             if testdetailsform.is_valid() and all([form.is_valid() for form in question_forms]):
-#                 total_marks = testdetailsform.cleaned_data.get('total_marks')
-#                 question_marks = [form.cleaned_data.get('marks') for form in question_forms]
+#                 tdetails = testdetailsform.save(commit=False)
+#                 course1=QMODEL.Course.objects.get(id=request.POST.get('course_id'))
+#                 tdetails.course_id=course1
+#                 tdetails.save()
+#                 total_marks = int(request.POST.get('total_marks'))
+#                 question_marks = [int(request.POST.get(f'form-{i}-marks')) for i in range(question_count)]
 
 #                 if total_marks != sum(question_marks):
 #                     messages.error(request, "Total marks should be equal to the sum of each question's marks.")
-#                     return render(request, 'teacher/teacher_add_question.html', {'testdetailsform': testdetailsform, 'question_forms': question_forms})
-
-#                 tdetails = testdetailsform.save(commit=False)
-#                 course1 = QMODEL.Course.objects.get(id=request.POST.get('course_id'))
-#                 tdetails.course_id = course1
-#                 tdetails.save()
-
+#                     # return render(request, 'teacher/teacher_add_question.html', context)
+#                 # testno3=form.cleaned_data['testno']
+#                 # print(testno3)
+#                 #question_forms.cleaned_data['course_id'] = course3
+#                 #course4=question_forms.cleaned_data['course_id']  
 #                 for i, form in enumerate(question_forms):
+#                     #form.cleaned_data['course_id'] = course3
+#                     #course4=form.cleaned_data['course_id']  
 #                     question = form.save(commit=False)
-#                     question.course_id = course3
-#                     question.testno = testno2
+#                     question.course_id=course3
+#                     question.testno=testno2
+#                     # emarkslist.append(emarks)
 #                     question.save()
-
+#                     # testno3 = QMODEL.Question.objects.last()
+#                     # testno3.testno=testno2
+#                     # testno3.save()
+                    
 #                 return HttpResponseRedirect('/teacher/teacher-view-question')
 #             else:
 #                 for field, errors in testdetailsform.errors.items():
 #                     for error in errors:
 #                         messages.error(request, f"{error}")
 
+#                 for i, form in enumerate(question_forms):
+#                     for field, errors in form.errors.items():
+#                         for error in errors:
+#                             messages.error(request, f"Question {i + 1}: {error}")
+#                 # print("Forms are invalid", testdetailsform.errors, "----", [form.errors for form in question_forms])
+        
+            
+#         context = {'testdetailsform': testdetailsform, 'question_forms': question_forms}
+#         return render(request, 'teacher/teacher_add_question.html', context)
 #     except Exception as e:
 #         print(e)
 #         return HttpResponseRedirect('/teacher/teacher-dashboard')
 
-#     context = {'testdetailsform': testdetailsform, 'question_forms': question_forms}
-#     return render(request, 'teacher/teacher_add_question.html', context)
+# new
+def teacher_add_question_view(request):
+    try:
+        teacher_id = QMODEL.Teacher.objects.get(user_id=request.user.id).pk
+        testdetailsform = QFORM.testdetailsForm(teacher_id=teacher_id, initial={'teacher_id': teacher_id})
+        question_count = 0
+
+        latest_testdetails = QMODEL.testdetails.objects.last()
+        testno1 = latest_testdetails.pk if latest_testdetails is not None else 0
+        testno2 = testno1 + 1
+
+        question_forms = [QFORM.QuestionForm(prefix=str(i)) for i in range(question_count)]
+
+        if request.method == 'POST':
+            course3 = QMODEL.Course.objects.get(id=request.POST.get('course_id'))
+            testdetailsform = QFORM.testdetailsForm(request.POST, teacher_id=teacher_id, initial={'teacher_id': teacher_id})
+            question_count = int(request.POST.get('question_number', 0))
+            question_forms = [QFORM.QuestionForm(request.POST, initial={'course_id': course3, 'testno': testno2}, prefix=str(i)) for i in range(question_count)]
+
+            if testdetailsform.is_valid() and all([form.is_valid() for form in question_forms]):
+                total_marks = testdetailsform.cleaned_data.get('total_marks')
+                question_marks = [form.cleaned_data.get('marks') for form in question_forms]
+
+                if total_marks != sum(question_marks):
+                    messages.error(request, "Total marks should be equal to the sum of each question's marks.")
+                    return render(request, 'teacher/teacher_add_question.html', {'testdetailsform': testdetailsform, 'question_forms': question_forms})
+
+                tdetails = testdetailsform.save(commit=False)
+                course1 = QMODEL.Course.objects.get(id=request.POST.get('course_id'))
+                tdetails.course_id = course1
+                tdetails.save()
+
+                for i, form in enumerate(question_forms):
+                    question = form.save(commit=False)
+                    question.course_id = course3
+                    question.testno = testno2
+                    question.save()
+
+                return HttpResponseRedirect('/teacher/teacher-view-question')
+            else:
+                for field, errors in testdetailsform.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{error}")
+
+    except Exception as e:
+        print(e)
+        return HttpResponseRedirect('/teacher/teacher-dashboard')
+
+    context = {'testdetailsform': testdetailsform, 'question_forms': question_forms}
+    return render(request, 'teacher/teacher_add_question.html', context)
 
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
