@@ -307,7 +307,17 @@ def contactus_view(request):
             email = sub.cleaned_data['Email']
             name=sub.cleaned_data['Name']
             message = sub.cleaned_data['Message']
-            send_mail(str(name)+' || '+str(email),message,settings.EMAIL_HOST_USER, settings.EMAIL_RECEIVING_USER, fail_silently = False)
+            
+            # send_mail(str(name)+' || '+str(email),message,str(email),settings.EMAIL_HOST_USER, fail_silently = False)
+            print(settings.EMAIL_HOST_USER)
+            print(email)
+            send_mail(
+                subject=str(name) + ' || ' + str(email),
+                message=message,
+                from_email=str(email),  # or specify a valid email address
+                recipient_list=[settings.EMAIL_HOST_USER],
+                fail_silently=False
+            )
             return render(request, 'quiz/contactussuccess.html')
     return render(request, 'quiz/contactus.html', {'form':sub})
 
