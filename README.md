@@ -6,7 +6,7 @@
 ```
 py manage.py createsuperuser
 ```
-- After Login, can see Total Number Of Student, Teacher, Course, Questions are there in system on Dashboard.
+- After Login, can see Total Number Of Student, Teacher, Course are there in system on Dashboard.
 - Can View, Update, Delete, Approve Teacher.
 - Can View, Update, Delete Student.
 - Can Also See Student Marks.
