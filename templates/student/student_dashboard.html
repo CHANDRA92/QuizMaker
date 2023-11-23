@@ -82,8 +82,6 @@
     alert-info
   {% elif message.tags == 'warning' %}
     alert-warning
-  {% elif message.tags == 'error' %}
-    alert-danger
   {% else %}
     alert-secondary {# Default to secondary if no match #}
   {% endif %}

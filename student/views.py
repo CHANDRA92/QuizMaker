@@ -52,11 +52,17 @@ user_flag = False
 def check_username(request):
     username = request.POST.get('username')
 
+    if len(username) == 0 :
+        return HttpResponse('<div style="color: red"> The username field must not be left blank. </div>')
+
+    if len(username) < 4 :
+        return HttpResponse('<div style="color: red"> The username field must not be less than 4 characters. </div>')
+    
     if User.objects.all().filter(username=username).exists():
         return HttpResponse('<div style="color: red"> This username already exists </div>')
     else:
         user_flag = True
-        return HttpResponse('<div style="color: green"> This username is available </div>')
+        return HttpResponse('<div style="color: green"> This username is available. </div>')
 
 # def check_useremail(request):
 #     email = request.POST.get('address')
@@ -104,6 +110,10 @@ def check_password_strength(request):
 
     # Custom password strength criteria
     min_length = 8
+    #default show msg 
+    if len(user_entered_password) == 0 :
+        return HttpResponse(f'<div style="color:green"> 8+ characters, mix of upper & lowercase, at least 1 number.</div>')
+    
     if len(user_entered_password) < min_length:
         return HttpResponse('<div style="color: red"> Password should be at least {} characters long </div>'.format(min_length))
 
@@ -129,42 +139,97 @@ def check_password_strength(request):
     flag = True
     return HttpResponse('<div style="color: green"> Password meets the strength criteria </div>')
 
+# def check_mobile(request):
+#     mobile_number = request.POST.get('mobile')
+
+#     # Check if the mobile number has a valid country code
+#     valid_country_codes = {
+#         '+1': 'United States',
+#         '+91': 'India',
+#         '+92': 'Pakistan',
+#         '+880': 'Bangladesh',
+#         '+94': 'Sri Lanka',
+#         '+977': 'Nepal',
+#         # Add more valid country codes and their names as needed
+#     }
+
+#     # Extract the country code from the mobile number
+#     country_code = next((code for code in valid_country_codes if mobile_number.startswith(code)), None)
+
+#     if country_code:
+#         # Remove the country code
+#         mobile_numbers = mobile_number[len(country_code):]
+
+#         # Check if the mobile number is 10 digits long for supported country codes
+#         is_valid_length = len(mobile_numbers) == 10
+
+#         if not is_valid_length:
+#             return HttpResponse(f'<div style="color: red"> The mobile number for {valid_country_codes[country_code]} must be 10 digits long </div>')
+#     else :
+#         return HttpResponse('<div style="color: red"> Service not available for the provided country code </div>')
+
+#     # is_valid_length = len(mobile_number) == 10
+
+#     if models.Student.objects.filter(mobile=mobile_number).exists():
+#         return HttpResponse('<div style="color: red"> This Mobile Number already exists </div>')
+#     else:
+#         return HttpResponse('<div style="color: green"> This Mobile Number is available </div>')
+#     # Check if the mobile number is 10 digits long
+
+# new mobile number checking code 
+# def check_mobile(request):
+#     valid_country_codes = {
+#         '+1': 'United States',
+#         '+91': 'India',
+#         '+92': 'Pakistan',
+#         '+880': 'Bangladesh',
+#         '+94': 'Sri Lanka',
+#         '+977': 'Nepal',
+#         # Add more valid country codes and their names as needed
+#     }
+
+#     if request.method == 'POST':
+#         mobile_number = request.POST.get('mobile')
+#         country_code = request.POST.get('country_code')
+
+#         if country_code not in valid_country_codes:
+#             return HttpResponse('<div style="color: red"> Invalid country code selected </div>')
+
+#         if not mobile_number or not mobile_number.startswith(country_code):
+#             return HttpResponse(f'<div style="color: red"> Invalid mobile number for {valid_country_codes[country_code]}</div>')
+
+#         mobile_numbers = mobile_number[len(country_code):]
+#         is_valid_length = len(mobile_numbers) == 10
+
+#         if not is_valid_length:
+#             return HttpResponse(f'<div style="color: red"> The mobile number for {valid_country_codes[country_code]} must be 10 digits long </div>')
+
+#         if models.Student.objects.filter(mobile=mobile_number).exists():
+#             return HttpResponse('<div style="color: red"> This Mobile Number already exists </div>')
+#         else:
+#             return HttpResponse('<div style="color: green"> This Mobile Number is available </div>')
+
+#     return render(request, 'student/check_mobile.html', {'valid_country_codes': valid_country_codes})
+# d
+
 def check_mobile(request):
-    mobile_number = request.POST.get('mobile')
+    if request.method == 'POST':
+        mobile_number = request.POST.get('mobile')
+        country_code = request.POST.get('country_code')
 
-    # Check if the mobile number has a valid country code
-    valid_country_codes = {
-        '+1': 'United States',
-        '+91': 'India',
-        '+92': 'Pakistan',
-        '+880': 'Bangladesh',
-        '+94': 'Sri Lanka',
-        '+977': 'Nepal',
-        # Add more valid country codes and their names as needed
-    }
-
-    # Extract the country code from the mobile number
-    country_code = next((code for code in valid_country_codes if mobile_number.startswith(code)), None)
-
-    if country_code:
-        # Remove the country code
-        mobile_numbers = mobile_number[len(country_code):]
-
-        # Check if the mobile number is 10 digits long for supported country codes
-        is_valid_length = len(mobile_numbers) == 10
+        # Check if the mobile number is 10 digits long
+        is_valid_length = len(mobile_number) == 10
 
         if not is_valid_length:
-            return HttpResponse(f'<div style="color: red"> The mobile number for {valid_country_codes[country_code]} must be 10 digits long </div>')
-    else :
-        return HttpResponse('<div style="color: red"> Service not available for the provided country code </div>')
+            return HttpResponse(f'<div style="color: red"> The mobile number must be 10 digits long </div>')
 
-    # is_valid_length = len(mobile_number) == 10
+        if models.Student.objects.filter(mobile=mobile_number).exists():
+            return HttpResponse('<div style="color: red"> This Mobile Number already exists </div>')
+        else:
+            return HttpResponse('<div style="color: green"> This Mobile Number is available </div>')
 
-    if models.Student.objects.filter(mobile=mobile_number).exists():
-        return HttpResponse('<div style="color: red"> This Mobile Number already exists </div>')
-    else:
-        return HttpResponse('<div style="color: green"> This Mobile Number is available </div>')
-    # Check if the mobile number is 10 digits long
+    return render(request, 'student/studentsignup.html')
+
 
 def student_signup_view(request):
     try:
@@ -177,6 +242,8 @@ def student_signup_view(request):
             studentForm = forms.StudentForm(request.POST, request.FILES)
             studentemail = request.POST.get('address')
             print(studentemail)
+            print(request.POST.get('country_code'))
+            print(request.POST.get('mobile'))
             print(flag)
             # flag for password check user_flag for username check
             if userForm.is_valid() and studentForm.is_valid() :
