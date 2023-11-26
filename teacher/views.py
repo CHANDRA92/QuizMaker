@@ -120,43 +120,6 @@ def check_password_strength_teacher(request):
     flag = True
     return HttpResponse('<div style="color: green"> Password meets the strength criteria </div>')
 
-# def check_mobile_teacher(request):
-#     mobile_number = request.POST.get('mobile')
-
-#     # Check if the mobile number has a valid country code
-#     valid_country_codes = {
-#         '+1': 'United States',
-#         '+91': 'India',
-#         '+92': 'Pakistan',
-#         '+880': 'Bangladesh',
-#         '+94': 'Sri Lanka',
-#         '+977': 'Nepal',
-#         # Add more valid country codes and their names as needed
-#     }
-
-#     # Extract the country code from the mobile number
-#     country_code = next((code for code in valid_country_codes if mobile_number.startswith(code)), None)
-
-#     if country_code:
-#         # Remove the country code
-#         mobile_numbers = mobile_number[len(country_code):]
-
-#         # Check if the mobile number is 10 digits long for supported country codes
-#         is_valid_length = len(mobile_numbers) == 10
-
-#         if not is_valid_length:
-#             return HttpResponse(f'<div style="color: red"> The mobile number for {valid_country_codes[country_code]} must be 10 digits long </div>')
-#     else :
-#         return HttpResponse('<div style="color: red"> Service not available for the provided country code </div>')
-
-#     # is_valid_length = len(mobile_number) == 10
-
-#     if models.Teacher.objects.filter(mobile=mobile_number).exists():
-#         return HttpResponse('<div style="color: red"> This Mobile Number already exists </div>')
-#     else:
-#         return HttpResponse('<div style="color: green"> This Mobile Number is available </div>')
-#     # Check if the mobile number is 10 digits long
-# Updated mobile number verfication
 def check_mobile_teacher(request):
     if request.method == 'POST':
         mobile_number = request.POST.get('mobile')
@@ -205,6 +168,7 @@ def teacher_signup_view(request):
         if userForm.is_valid() and teacherForm.is_valid():
             user=userForm.save()
             user.set_password(user.password)
+            user.email = request.POST.get('address')
             user.save()
             teacher=teacherForm.save(commit=False)
             teacher.user=user
@@ -290,70 +254,6 @@ def teacher_question_view(request):
 #modified
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
-
-# def teacher_add_question_view(request):
-#     try:
-#         teacher_id = QMODEL.Teacher.objects.get(user_id=request.user.id).pk
-#         testdetailsform = QFORM.testdetailsForm(teacher_id=teacher_id,initial={'teacher_id': teacher_id})
-#         question_count = 0
-#         # testno1 = QMODEL.testdetails.objects.last().pk
-#         # testno2 = testno1 + 1 if testno1 is not None else 1
-
-#         latest_testdetails = QMODEL.testdetails.objects.last()
-#         testno1 = latest_testdetails.pk if latest_testdetails is not None else 0
-#         testno2 = testno1 + 1
-        
-#         question_forms = [QFORM.QuestionForm(prefix=str(i)) for i in range(question_count)]
-#         if request.method == 'POST':
-#             course3=QMODEL.Course.objects.get(id=request.POST.get('course_id'))    
-#             testdetailsform = QFORM.testdetailsForm(request.POST,teacher_id=teacher_id, initial={'teacher_id': teacher_id})
-#             question_count = int(request.POST.get('question_number', 0))
-#             question_forms = [QFORM.QuestionForm(request.POST,initial={'course_id':course3,'testno':testno2} ,prefix=str(i)) for i in range(question_count)]  
-#             if testdetailsform.is_valid() and all([form.is_valid() for form in question_forms]):
-#                 tdetails = testdetailsform.save(commit=False)
-#                 course1=QMODEL.Course.objects.get(id=request.POST.get('course_id'))
-#                 tdetails.course_id=course1
-#                 tdetails.save()
-#                 total_marks = int(request.POST.get('total_marks'))
-#                 question_marks = [int(request.POST.get(f'form-{i}-marks')) for i in range(question_count)]
-
-#                 if total_marks != sum(question_marks):
-#                     messages.error(request, "Total marks should be equal to the sum of each question's marks.")
-#                     # return render(request, 'teacher/teacher_add_question.html', context)
-#                 # testno3=form.cleaned_data['testno']
-#                 # print(testno3)
-#                 #question_forms.cleaned_data['course_id'] = course3
-#                 #course4=question_forms.cleaned_data['course_id']  
-#                 for i, form in enumerate(question_forms):
-#                     #form.cleaned_data['course_id'] = course3
-#                     #course4=form.cleaned_data['course_id']  
-#                     question = form.save(commit=False)
-#                     question.course_id=course3
-#                     question.testno=testno2
-#                     # emarkslist.append(emarks)
-#                     question.save()
-#                     # testno3 = QMODEL.Question.objects.last()
-#                     # testno3.testno=testno2
-#                     # testno3.save()
-                    
-#                 return HttpResponseRedirect('/teacher/teacher-view-question')
-#             else:
-#                 for field, errors in testdetailsform.errors.items():
-#                     for error in errors:
-#                         messages.error(request, f"{error}")
-
-#                 for i, form in enumerate(question_forms):
-#                     for field, errors in form.errors.items():
-#                         for error in errors:
-#                             messages.error(request, f"Question {i + 1}: {error}")
-#                 # print("Forms are invalid", testdetailsform.errors, "----", [form.errors for form in question_forms])
-        
-            
-#         context = {'testdetailsform': testdetailsform, 'question_forms': question_forms}
-#         return render(request, 'teacher/teacher_add_question.html', context)
-#     except Exception as e:
-#         print(e)
-#         return HttpResponseRedirect('/teacher/teacher-dashboard')
 
 # new
 def teacher_add_question_view(request):

@@ -1,6 +1,14 @@
 from django.urls import path
 from teacher import views
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import (
+    LogoutView, 
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
+
 
 urlpatterns = [
 path('teacherclick', views.teacherclick_view),
@@ -44,4 +52,16 @@ path('check_username_teacher', views.check_username_teacher, name='check_usernam
 path('check_useremail_teacher', views.check_useremail_teacher, name='check_useremail_teacher'),
 path('check_mobile_teacher', views.check_mobile_teacher, name='check_mobile_teacher'),
 path('check_password_teacher', views.check_password_strength_teacher, name='check_password_teacher'),
+#Forgot Password
+path('teacher-password-reset', 
+        PasswordResetView.as_view(
+            template_name='teacher/users/t_password_reset.html',
+            html_email_template_name='teacher/users/t_password_reset_email.html'
+        ),
+        name='teacher-password-reset'
+    ),
+    path('teacher-password-reset/done/', PasswordResetDoneView.as_view(template_name='teacher/users/t_password_reset_done.html'),name='teacher-password-reset-done'),
+    path('teacher-password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='teacher/users/t_password_reset_confirm.html'),name='teacher-password-reset-confirm'),
+    path('teacher-password-reset-complete/',PasswordResetCompleteView.as_view(template_name='teacher/users/t_password_reset_complete.html'),name='teacher-password-reset-complete'),
+
 ]
