@@ -217,13 +217,15 @@ def check_mobile(request):
         mobile_number = request.POST.get('mobile')
         country_code = request.POST.get('country_code')
 
+        full_mobile_number = f"{country_code}{mobile_number}"
+
         # Check if the mobile number is 10 digits long
         is_valid_length = len(mobile_number) == 10
 
         if not is_valid_length:
             return HttpResponse(f'<div style="color: red"> The mobile number must be 10 digits long </div>')
 
-        if models.Student.objects.filter(mobile=mobile_number).exists():
+        if models.Student.objects.filter(mobile=full_mobile_number).exists():
             return HttpResponse('<div style="color: red"> This Mobile Number already exists </div>')
         else:
             return HttpResponse('<div style="color: green"> This Mobile Number is available </div>')

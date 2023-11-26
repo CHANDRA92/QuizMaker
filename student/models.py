@@ -6,7 +6,7 @@ class Student(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     #profile_pic= models.ImageField(upload_to='profile_pic/Student/',null=True,blank=True)
     address = models.EmailField(max_length=100,unique=True)
-    country_code = models.CharField(max_length=5) 
+    # country_code = models.CharField(max_length=5) 
     mobile = models.CharField(max_length=16,null=False)
    
     @property

@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    <div class="form-row">
+       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="first_name">First Name <span style="color:red";>*</span></label>
            {% render_field userForm.first_name|attr:'required:true'  class="form-control" placeholder="First Name" %}
@@ -140,46 +140,39 @@
       </div>
 
       <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="mobile">Mobile <span style="color:red";>*</span></label>
-          {% comment %}
-          {% render_field studentForm.mobile|attr:'required:true'  class="form-control" placeholder="Mobile Number" %} 
-           <input type="text" name="mobile" id="mobile" placeholder="Mobile Number" class="form-control" required="true"> {% endcomment %}
-        
-          <input type="text" name="mobile" id="mobile" placeholder="Mobile number" class="form-control" 
-            hx-post="{% url 'check_mobile_teacher' %}" hx-target="#mobile_check" hx-trigger="keyup">
-
-            <div id="mobile_check"></div>
-
+            <div class="form-group col-md-2">
+                <label for="country_code">Country Code <span style="color:red">*</span></label>
+                <select id="country_code" name="country_code" class="form-control form-select">
+                    <option value="+91">+91 - India</option>
+                    <option value="+880">+880 - Bangladesh</option>
+                    <option value="+977">+977 - Nepal</option>
+                    <option value="+94">+94 - Sri Lanka</option>
+                    <option value="+1">+1 - United States</option>
+                    <option value="+92">+92 - Pakistan</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="mobile">Mobile <span style="color:red">*</span></label>
+                <input type="text" name="mobile" id="mobile" placeholder="Mobile number" class="form-control" 
+                    hx-post="{% url 'check_mobile_teacher' %}" hx-target="#mobile_check" hx-trigger="keyup">
+                <div id="mobile_check"></div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="address">Email <span style="color:red">*</span></label>
+                <input type="email" name="address" id="address" placeholder="Email Address" class="form-control" 
+                    hx-post="{% url 'check_useremail_teacher' %}" hx-target="#useremail-check" hx-trigger="keyup">
+                <div id="useremail-check"></div>
+            </div>
         </div>
-        <!-- put type="text" class="form-control is-valid -->
-        <div class="form-group col-md-6">
-          <label for="address">Email <span style="color:red";>*</span></label>
-          <!-- {% render_field studentForm.address|attr:'required:true'  class="form-control" placeholder="Email Address" %}  -->
-           <input type="email" name="address" id="address" placeholder="Email Address" class="form-control" 
-            hx-post="{% url 'check_useremail_teacher' %}" hx-target="#useremail-check" hx-trigger="keyup">
-
-            <div id="useremail-check"></div>
-
-
+        <br>
+        <div style="display: flex;align-items: center; justify-content: center;">
+            <button type="submit" class="btn btn-primary">Sign Up</button>
         </div>
-      </div>
-
-      {% comment %} <div class="form-row">
-        <div class="form-group col-md-12">
-          <label for="profile_pic">Profile Picture</label>
-          <!-- {% render_field studentForm.profile_pic class="form-control" placeholder="" %} -->
-          <input type="file" name="profile_pic" id="profile_pic" placeholder="Select Profile Pic" class="form-control" required="false">
-        </div>
-        
-      </div> {% endcomment %}
-
-
-    <button type="submit" class="btn btn-primary">Sign Up</button>
-  </form>
-
+    </form>
 
 <br><br><br><br><br><br><br><br><br><br><br>
 <!-- {% include "quiz/footer.html" %} -->
   </body>
 </html>
+        
