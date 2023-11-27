@@ -34,7 +34,7 @@ from django.utils.encoding import force_bytes,force_str
 
 from django.http import HttpResponseServerError
 from django.views.decorators.csrf import csrf_protect,csrf_exempt
-
+from timeout_decorator import timeout
 # forgot password
 
 from django.contrib.auth import authenticate,login,logout
@@ -440,7 +440,8 @@ def take_exam_view(request,pk):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
-@csrf_exempt
+# @csrf_exempt
+@timeout(120) 
 def start_exam_view(request,testno):
     c = {}
     # course=QMODEL.Course.objects.get(id=pk)
@@ -457,6 +458,7 @@ def start_exam_view(request,testno):
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 # @csrf_exempt
+@timeout(120) 
 def calculate_marks_view(request):
     try:
         # if request.COOKIES.get('course_id') is not None:
