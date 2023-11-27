@@ -14,6 +14,7 @@ from django.http import HttpResponse
 import os
 from . info import *
 import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -93,9 +94,12 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 #Vercel Server
+# Load environment variables from .env file
+load_dotenv()
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://default:X2hVB7KyWrIR@ep-broken-block-77778577.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb')
+    'default': dj_database_url.config(default='DATABASE_URL')
     }
+
 
 # SuperBase Server
 # DATABASES = {
