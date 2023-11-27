@@ -43,8 +43,8 @@
                 
                             <li>Try to answer as quickly as you can.</li>
                             {% comment %} <li>If you press refresh or go back to the previous page, there will be a new question for you and the question you were on will be counted as attempted.</li> {% endcomment %}
-                            <li>Questions are displayed randomly for every user.</li>
-                            <li>You will be told your marks immediately when you submit the answer.</li>
+                            {% comment %} <li>Questions are displayed randomly for every user.</li> {% endcomment %}
+                            <li>You will be told your marks after release by the Teacher.</li>
                         </ul>
                     <p></p>
                     <a href="{% url 'start-exam' testno  %}" class="btn btn-info">Let's Start</a>
