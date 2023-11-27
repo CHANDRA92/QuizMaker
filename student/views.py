@@ -440,7 +440,6 @@ def take_exam_view(request,pk):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
-# @csrf_exempt
 # @timeout(120) 
 # def start_exam_view(request,testno):
 #     c = {}
@@ -454,6 +453,7 @@ def take_exam_view(request,pk):
 #     response.set_cookie('testno',testno)
 #     return response
 # new code
+@csrf_exempt
 @timeout(120)  # Set a timeout of 2 minutes (120 seconds)
 def start_exam_view(request, testno):
     try:
@@ -481,7 +481,7 @@ def start_exam_view(request, testno):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
-# @csrf_exempt
+@csrf_exempt
 @timeout(120) 
 def calculate_marks_view(request):
     try:
