@@ -95,6 +95,7 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 
 #Vercel Server
 # Load environment variables from .env file
+DATABASE_URL = os.environ.get('DATABASE_URL')
 load_dotenv()
 DATABASES = {
     'default': dj_database_url.config(default='DATABASE_URL')
