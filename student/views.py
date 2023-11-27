@@ -456,7 +456,7 @@ def start_exam_view(request,testno):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
-@csrf_exempt
+# @csrf_exempt
 def calculate_marks_view(request):
     try:
         # if request.COOKIES.get('course_id') is not None:
