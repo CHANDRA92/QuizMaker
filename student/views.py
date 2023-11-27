@@ -441,19 +441,43 @@ def take_exam_view(request,pk):
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 # @csrf_exempt
-@timeout(120) 
-def start_exam_view(request,testno):
-    c = {}
-    # course=QMODEL.Course.objects.get(id=pk)
-    course=QMODEL.testdetails.objects.get(id=testno)
-    questions=QMODEL.Question.objects.all().filter(testno=testno)
-    if request.method=='POST':
-        pass
-    response= render(request,'student/start_exam.html',{'course':course,'questions':questions})
-    #response.set_cookie('course_id',course.id)
-    response.set_cookie('testno',testno)
-    return response
+# @timeout(120) 
+# def start_exam_view(request,testno):
+#     c = {}
+#     # course=QMODEL.Course.objects.get(id=pk)
+#     course=QMODEL.testdetails.objects.get(id=testno)
+#     questions=QMODEL.Question.objects.all().filter(testno=testno)
+#     if request.method=='POST':
+#         pass
+#     response= render(request,'student/start_exam.html',{'course':course,'questions':questions})
+#     #response.set_cookie('course_id',course.id)
+#     response.set_cookie('testno',testno)
+#     return response
+# new code
+@timeout(120)  # Set a timeout of 2 minutes (120 seconds)
+def start_exam_view(request, testno):
+    try:
+        # Fetch the course details and questions
+        course = QMODEL.testdetails.objects.get(id=testno)
+        questions = QMODEL.Question.objects.filter(testno=testno)
 
+        if request.method == 'POST':
+            # Handle POST requests if needed
+            pass
+
+        # Render the exam start page with course and questions
+        response = render(request, 'student/start_exam.html', {'course': course, 'questions': questions})
+        response.set_cookie('testno', testno)
+        return response
+
+    except QMODEL.testdetails.DoesNotExist:
+        # Handle the case where the specified testno does not exist
+        return HttpResponse("Test details not found.", status=404)
+
+    except Exception as e:
+        # Handle other exceptions, log them, and provide an appropriate response
+        print(f"An error occurred: {e}")
+        return HttpResponse("An error occurred.", status=500)
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
